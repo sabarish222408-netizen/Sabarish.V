@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f5f0">
+  <title>Alcohol Testing | BAC Estimate</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="site-heading">
+      <p class="eyebrow">A personal estimate</p>
+      <h1>Alcohol <span>Testing</span></h1>
+      <p class="intro">Estimate your blood alcohol concentration with a few details about your drinks.</p>
+    </header>
+
+    <section class="calculator" aria-labelledby="form-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">BAC calculator</p>
+          <h2 id="form-heading">Your details</h2>
+        </div>
+        <span class="method-tag">Widmark estimate</span>
+      </div>
+
+      <form id="bac-form">
+        <div class="field">
+          <label for="gender">Sex used for this estimate</label>
+          <select id="gender" name="gender" required>
+            <option value="" selected disabled>Select one</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <small>Widmark distribution factors are estimates and vary between people.</small>
+        </div>
+
+        <div class="field">
+          <label for="weight">Weight <span>(kg)</span></label>
+          <input id="weight" name="weight" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="e.g. 70" required>
+        </div>
+
+        <div class="field">
+          <label for="drinks">Standard drinks consumed</label>
+          <input id="drinks" name="drinks" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 2" required>
+          <small>For this estimate, one standard drink contains 14 g of pure alcohol.</small>
+        </div>
+
+        <div class="field">
+          <label for="hours">Hours since your first drink</label>
+          <input id="hours" name="hours" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 1.5" required>
+        </div>
+
+        <button class="calculate-button" type="submit">Calculate estimate <span aria-hidden="true">&#8594;</span></button>
+      </form>
+
+      <section id="result" class="result" aria-live="polite" aria-atomic="true" hidden>
+        <div class="result-topline">
+          <p class="eyebrow" id="result-label">Estimated BAC</p>
+          <span id="result-value" class="result-value">0.00%</span>
+        </div>
+        <h2 id="result-heading"></h2>
+        <p id="result-message" class="result-message"></p>
+        <p class="result-caution">This screening estimate cannot tell whether you are fit to drive. The safest choice after drinking is not to drive.</p>
+      </section>
+    </section>
+
+    <footer class="disclaimer">
+      <span class="footer-mark" aria-hidden="true">!</span>
+      <p>This is an estimate for educational purposes only, not a medical or legal measurement. Legal limits vary by location.</p>
+    </footer>
+  </main>
+</body>
+</html>
