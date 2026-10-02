@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alcohol Testing - BAC Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>🍺 Alcohol Testing Calculator</h1>
+    <p class="subtitle">Estimate your Blood Alcohol Content (BAC)</p>
+
+    <form id="bacForm">
+      <label for="gender">Gender</label>
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <label for="weight">Weight (kg)</label>
+      <input type="number" id="weight" placeholder="e.g. 70" min="1" required>
+
+      <label for="drinks">Number of Drinks</label>
+      <input type="number" id="drinks" placeholder="e.g. 3" min="0" required>
+
+      <label for="hours">Hours Since First Drink</label>
+      <input type="number" id="hours" placeholder="e.g. 2" min="0" step="0.1" required>
+
+      <button type="submit">Calculate BAC</button>
+    </form>
+
+    <div id="result" class="result hidden"></div>
+
+    <p class="disclaimer">
+      ⚠️ This is an estimate for educational purposes only. 
+      It is NOT a medical or legal measurement of alcohol impairment. 
+      Never drink and drive.
+    </p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

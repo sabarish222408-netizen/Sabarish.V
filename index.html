@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f3f5f0">
   <title>Alcohol Testing | BAC Estimate</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <script src="script.js?v=2" defer></script>
 </head>
 <body>
   <main class="page-shell">
@@ -64,6 +64,42 @@
         <p id="result-message" class="result-message"></p>
         <p class="result-caution">This screening estimate cannot tell whether you are fit to drive. The safest choice after drinking is not to drive.</p>
       </section>
+    </section>
+
+    <section class="eye-test" aria-labelledby="eye-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Optional camera activity</p>
+          <h2 id="eye-heading">Eye Follow</h2>
+        </div>
+        <span class="method-tag">On this device only</span>
+      </div>
+      <p class="eye-intro">Turn on your camera, then follow the moving point with your eyes while keeping your head still.</p>
+
+      <div class="eye-grid">
+        <div class="camera-column">
+          <div class="camera-frame">
+            <video id="eye-video" autoplay playsinline muted hidden aria-label="Live camera preview"></video>
+            <p id="camera-placeholder" class="camera-placeholder">Camera preview appears here after you allow access.</p>
+          </div>
+          <p class="camera-caption">The preview stays in your browser. No video is recorded or uploaded.</p>
+        </div>
+
+        <div class="activity-column">
+          <div id="eye-stage" class="eye-stage" aria-label="Target area">
+            <span id="eye-target" class="eye-target" hidden></span>
+            <span class="stage-label">Follow the point</span>
+          </div>
+          <p id="eye-status" class="eye-status" role="status" aria-live="polite">Camera is off. Start the camera to begin.</p>
+        </div>
+      </div>
+
+      <div class="eye-controls">
+        <button id="camera-start" class="control-button primary" type="button">Start camera</button>
+        <button id="eye-start" class="control-button" type="button" disabled>Start eye activity</button>
+        <button id="camera-stop" class="control-button stop" type="button" disabled>Stop camera</button>
+      </div>
+      <p class="eye-disclaimer">This is only a visual-following activity. It cannot detect alcohol impairment or determine whether it is safe or legal to drive.</p>
     </section>
 
     <footer class="disclaimer">

@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Alcohol Testing site",
+			"type": "shell",
+			"command": "py",
+			"args": [
+				"-m",
+				"http.server",
+				"5500"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

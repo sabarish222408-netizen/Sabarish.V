@@ -52,3 +52,117 @@ form.addEventListener("submit", (event) => {
 
   result.hidden = false;
 });
+
+const eyeVideo = document.querySelector("#eye-video");
+const cameraPlaceholder = document.querySelector("#camera-placeholder");
+const eyeTarget = document.querySelector("#eye-target");
+const eyeStatus = document.querySelector("#eye-status");
+const cameraStartButton = document.querySelector("#camera-start");
+const cameraStopButton = document.querySelector("#camera-stop");
+const eyeStartButton = document.querySelector("#eye-start");
+
+const targetPositions = [
+  [18, 20], [50, 18], [82, 22], [80, 50],
+  [82, 80], [50, 78], [18, 80], [20, 50],
+];
+let cameraStream = null;
+let targetTimer = null;
+
+cameraStartButton.addEventListener("click", async () => {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    eyeStatus.textContent = "Camera access is unavailable here. Open this page on localhost or HTTPS in a supported browser.";
+    return;
+  }
+
+  cameraStartButton.disabled = true;
+  eyeStatus.textContent = "Waiting for camera permission...";
+
+  try {
+    // Request video only. The stream is displayed locally and is never uploaded.
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "user" } },
+      audio: false,
+    });
+    eyeVideo.srcObject = cameraStream;
+    eyeVideo.hidden = false;
+    cameraPlaceholder.hidden = true;
+    await eyeVideo.play();
+    cameraStopButton.disabled = false;
+    eyeStartButton.disabled = false;
+    eyeStatus.textContent = "Camera is on. Start the eye-following activity when ready.";
+  } catch (error) {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      cameraStream = null;
+    }
+    eyeVideo.srcObject = null;
+    eyeVideo.hidden = true;
+    cameraPlaceholder.hidden = false;
+    cameraStartButton.disabled = false;
+    cameraStopButton.disabled = true;
+    eyeStartButton.disabled = true;
+    if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+      eyeStatus.textContent = "Camera access was blocked. Allow camera access for this site in the browser and Windows camera privacy settings, then try again.";
+    } else if (error.name === "NotFoundError" || error.name === "DevicesNotFoundError") {
+      eyeStatus.textContent = "No camera is available to this browser. Connect or enable a webcam, then retry. If one is connected, check Windows camera privacy settings.";
+    } else if (error.name === "NotReadableError" || error.name === "AbortError") {
+      eyeStatus.textContent = "The camera is busy or unavailable. Close other apps using it, check its connection, and retry.";
+    } else if (error.name === "OverconstrainedError") {
+      eyeStatus.textContent = "The camera could not meet the requested settings. Try another camera or check its driver.";
+    } else {
+      eyeStatus.textContent = `The camera could not start (${error.name || "unknown error"}). Check browser and Windows permissions, then retry.`;
+    }
+  }
+});
+
+eyeStartButton.addEventListener("click", () => {
+  if (!cameraStream) {
+    return;
+  }
+
+  clearInterval(targetTimer);
+  eyeStartButton.disabled = true;
+  eyeTarget.hidden = false;
+  eyeStatus.textContent = "Follow the point with your eyes for one slow lap. This activity does not assess impairment.";
+  let positionIndex = 0;
+
+  const moveTarget = () => {
+    if (positionIndex >= targetPositions.length) {
+      clearInterval(targetTimer);
+      targetTimer = null;
+      eyeTarget.hidden = true;
+      eyeStartButton.disabled = false;
+      eyeStatus.textContent = "Activity complete. No impairment or driving-safety result can be inferred from this exercise.";
+      return;
+    }
+
+    const [left, top] = targetPositions[positionIndex];
+    eyeTarget.style.left = `${left}%`;
+    eyeTarget.style.top = `${top}%`;
+    positionIndex += 1;
+  };
+
+  moveTarget();
+  targetTimer = window.setInterval(moveTarget, 1100);
+});
+
+cameraStopButton.addEventListener("click", stopCamera);
+window.addEventListener("pagehide", stopCamera);
+
+function stopCamera() {
+  clearInterval(targetTimer);
+  targetTimer = null;
+  if (cameraStream) {
+    cameraStream.getTracks().forEach((track) => track.stop());
+    cameraStream = null;
+  }
+
+  eyeVideo.srcObject = null;
+  eyeVideo.hidden = true;
+  cameraPlaceholder.hidden = false;
+  eyeTarget.hidden = true;
+  cameraStartButton.disabled = false;
+  cameraStopButton.disabled = true;
+  eyeStartButton.disabled = true;
+  eyeStatus.textContent = "Camera is off. Start the camera to begin.";
+}
